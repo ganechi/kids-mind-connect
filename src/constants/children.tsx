@@ -1,7 +1,7 @@
 export const children = [
     {
       id: 1,
-      name: "たくくん",
+      name: "ひらおか たく",
       age: 9,
       photo: "/placeholder.svg?height=100&width=100",
       interests: ["アート", "読書"],
@@ -15,7 +15,7 @@ export const children = [
     },
     {
       id: 2,
-      name: "たかふみくん",
+      name: "おおがね たかふみ",
       age: 9,
       photo: "/placeholder.svg?height=100&width=100",
       interests: ["スポーツ", "科学"],
@@ -29,7 +29,7 @@ export const children = [
     },
     {
       id: 3,
-      name: "たいきくん",
+      name: "はやし たいき",
       age: 6,
       photo: "/placeholder.svg?height=100&width=100",
       interests: ["スポーツ", "科学"],
@@ -43,7 +43,7 @@ export const children = [
     },
     {
       id: 4,
-      name: "さくらちゃん",
+      name: "ほりぐち さくら",
       age: 10,
       photo: "/placeholder.svg?height=100&width=100",
       interests: ["スポーツ", "科学"],
@@ -57,7 +57,7 @@ export const children = [
     },
     {
       id: 5,
-      name: "なおあきくん",
+      name: "さたけ なおあき",
       age: 12,
       photo: "/placeholder.svg?height=100&width=100",
       interests: ["スポーツ", "科学"],
@@ -71,7 +71,7 @@ export const children = [
     },
     {
       id: 6,
-      name: "ゆうすけくん",
+      name: "いしはら ゆうすけ",
       age: 12,
       photo: "/placeholder.svg?height=100&width=100",
       interests: ["スポーツ", "科学"],
