@@ -56,7 +56,7 @@ export default function ActivityLog() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800">活動ログ</h2>
+      <h2 className="text-2xl font-semibold text-gray-800">AI活動ログ</h2>
       <Card>
         <CardHeader>
           <CardTitle>新しい活動を追加</CardTitle>

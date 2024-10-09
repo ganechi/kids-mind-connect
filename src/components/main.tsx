@@ -33,11 +33,11 @@ export default function Page() {
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-teal-400 p-4 md:p-8">
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
         <header className="bg-white p-4 md:p-6 border-b flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-600">KidsMindConnect</h1>
-          <button onClick={toggleMenu} className="md:hidden">
+        <button onClick={toggleMenu} className="md:hidden">
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <div className="relative mt-2">
+          <h1 className="text-3xl font-bold text-blue-600">KidsMindConnect</h1>
+          <div className="relative mt-2 invisible md:visible">
             <button type="button" className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
               <span className="flex items-center">
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgWmX7QY-HZMc2pj01KPxjvVQydjsGm0OCRRlDXWZDysJi71ixlv9mgJHbSIPVsMXhuE9SEemrO5EMke340xbgufZfx9j6t3f0KV3pH5d9mK7ZmO-8_3xNgA_3i38bPIQJBTPQMciJGHcg/s800/icon_business_woman04.png" alt="" className="h-5 w-5 flex-shrink-0 rounded-full"/>
@@ -53,13 +53,12 @@ export default function Page() {
         </header>
         <div className="flex flex-col md:flex-row">
           <AnimatePresence>
-            {(isMenuOpen || window.innerWidth >= 768) && (
               <motion.nav
                 initial={{ x: -300, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -300, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="w-full md:w-64 bg-gray-100 p-4"
+                className={`w-full md:w-64 bg-gray-100 p-4 ${isMenuOpen ? 'block' : 'hidden md:block'}`}
               >
                 <ul className="space-y-2">
                   {menuItems.map((item) => (
@@ -82,7 +81,6 @@ export default function Page() {
                   ))}
                 </ul>
               </motion.nav>
-            )}
           </AnimatePresence>
           <main className="flex-grow p-4 md:p-6">
             {activeTab === "dashboard" && <Dashboard />}

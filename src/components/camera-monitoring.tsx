@@ -91,7 +91,7 @@ export default function CameraMonitoring() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800">カメラモニタリング</h2>
+      <h2 className="text-2xl font-semibold text-gray-800">AIモニタリング</h2>
       <Card>
         <CardHeader>
           <CardTitle>リアルタイム映像</CardTitle>

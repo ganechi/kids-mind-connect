@@ -12,7 +12,7 @@ export default function ChildProfiles() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800">児童プロフィール</h2>
+      <h2 className="text-2xl font-semibold text-gray-800">こどもリスト</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {children.map((child) => (
           <Card key={child.id} className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedChild(child)}>
