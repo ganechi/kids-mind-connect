@@ -11,7 +11,6 @@ import CameraMonitoring from "./camera-monitoring"
 import StaffNotes from "./staff-notes"
 import Reports from "./reports"
 import ParentNotifications from "./parent-notifications"
-import Image from 'next/image';
 
 const menuItems = [
   { icon: Bell, label: "ダッシュボード", value: "dashboard", color: "bg-pink-500" },
@@ -41,7 +40,7 @@ export default function Page() {
           <div className="relative mt-2">
             <button type="button" className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
               <span className="flex items-center">
-                <Image src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgWmX7QY-HZMc2pj01KPxjvVQydjsGm0OCRRlDXWZDysJi71ixlv9mgJHbSIPVsMXhuE9SEemrO5EMke340xbgufZfx9j6t3f0KV3pH5d9mK7ZmO-8_3xNgA_3i38bPIQJBTPQMciJGHcg/s800/icon_business_woman04.png" alt="" className="h-5 w-5 flex-shrink-0 rounded-full"/>
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgWmX7QY-HZMc2pj01KPxjvVQydjsGm0OCRRlDXWZDysJi71ixlv9mgJHbSIPVsMXhuE9SEemrO5EMke340xbgufZfx9j6t3f0KV3pH5d9mK7ZmO-8_3xNgA_3i38bPIQJBTPQMciJGHcg/s800/icon_business_woman04.png" alt="" className="h-5 w-5 flex-shrink-0 rounded-full"/>
                 <span className="ml-3 block truncate">大鐘さん</span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
@@ -54,7 +53,7 @@ export default function Page() {
         </header>
         <div className="flex flex-col md:flex-row">
           <AnimatePresence>
-            {(isMenuOpen) && (
+            {(isMenuOpen || window.innerWidth >= 768) && (
               <motion.nav
                 initial={{ x: -300, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
