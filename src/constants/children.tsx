@@ -11,7 +11,7 @@ export const children = [
         reading: 92,
         science: 78,
       },
-      emotion: "happy",
+      emotion: "😃",
     },
     {
       id: 2,
@@ -25,7 +25,7 @@ export const children = [
         reading: 80,
         science: 95,
       },
-      emotion: "excited",
+      emotion: "🥳",
     },
     {
       id: 3,
@@ -39,7 +39,7 @@ export const children = [
         reading: 80,
         science: 95,
       },
-      emotion: "angry",
+      emotion: "😡",
     },
     {
       id: 4,
@@ -53,7 +53,7 @@ export const children = [
         reading: 80,
         science: 95,
       },
-      emotion: "calm",
+      emotion: "😂",
     },
     {
       id: 5,
@@ -67,6 +67,20 @@ export const children = [
         reading: 80,
         science: 95,
       },
-      emotion: "sad",
+      emotion: "🤔",
+    },
+    {
+      id: 6,
+      name: "ゆうすけくん",
+      age: 12,
+      photo: "/placeholder.svg?height=100&width=100",
+      interests: ["スポーツ", "科学"],
+      behavioralPatterns: ["活発", "集中力が散漫"],
+      learningProgress: {
+        math: 90,
+        reading: 80,
+        science: 95,
+      },
+      emotion: "💤",
     },
   ]

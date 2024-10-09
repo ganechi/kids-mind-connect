@@ -4,22 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Bell, Camera } from "lucide-react"
 import { children } from "@/constants/children"
-
-const emotionEmojis:any = {
-  happy: "😊",
-  sad: "😢",
-  excited: "😃",
-  calm: "😌",
-  angry: "😠",
-}
-
-const activities = [
-  "アート＆クラフト",
-  "外遊び",
-  "読書タイム",
-  "STEMワークショップ",
-  "音楽とダンス",
-]
+import { activities } from "@/constants/activites"
 
 const latestAiActivity = {
   time: "11:45",
@@ -41,7 +26,7 @@ export default function Dashboard() {
               {children.map((child:any) => (
                 <li key={child.name} className="flex items-center justify-between">
                   <span>{child.name}</span>
-                  <span className="text-2xl">{emotionEmojis[child.emotion]}</span>
+                  <span className="text-2xl">{child.emotion}</span>
                 </li>
               ))}
             </ul>

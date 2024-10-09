@@ -28,7 +28,7 @@ export default function Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-teal-400 p-4 md:p-8">
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
