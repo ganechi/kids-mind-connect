@@ -5,18 +5,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { AlertTriangle, AlertCircle, Info, Star } from "lucide-react"
-import Image from "next/image"
-
-const children = [
-  { id: 1, name: "はなこ" },
-  { id: 2, name: "たろう" },
-  { id: 3, name: "みさき" },
-  { id: 4, name: "けんた" },
-  { id: 5, name: "さくら" },
-]
+import { children } from "@/constants/children"
 
 const activities = [
-  { type: "緊急", content: "不審者を検知しました。すぐに確認が必要です。", icon: AlertCircle, color: "bg-red-100 text-red-800" },
   { type: "緊急", content: "たくくんが木にぶつかって怪我をしてしまいました。応急処置が必要です。", icon: AlertCircle, color: "bg-red-100 text-red-800" },
   { type: "中", content: "ゆうきくんとあいちゃんがおもちゃの取り合いをしています。仲裁が必要かもしれません。", icon: AlertTriangle, color: "bg-yellow-100 text-yellow-800" },
   { type: "中", content: "まなみちゃんが高い場所によじ登ろうとしています。注意が必要です。", icon: AlertTriangle, color: "bg-yellow-100 text-yellow-800" },
@@ -36,7 +27,7 @@ export default function CameraMonitoring() {
   useEffect(() => {
     const interval = setInterval(() => {
       generateAIAnalysis()
-    }, 1000) // 5秒ごとに分析を生成
+    }, 3000) // 3秒ごとに分析を生成
 
     return () => clearInterval(interval)
   }, [])
@@ -80,7 +71,7 @@ export default function CameraMonitoring() {
 
   return (
     <div className="h-full flex flex-col space-y-6">
-      <h2 className="text-3xl font-bold text-gray-800">カメラモニタリング</h2>
+      <h2 className="text-3xl font-bold text-gray-800">AIカメラモニタリング</h2>
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden">
         <Card className="bg-white shadow-lg flex flex-col">
           <CardContent className="flex-1 flex flex-col p-4">
@@ -136,13 +127,6 @@ export default function CameraMonitoring() {
                     <div className="flex items-start space-x-4">
                       <div className="flex-shrink-0">
                         <div className="w-[100px] h-[100px] bg-gray-200 rounded-md flex items-center justify-center overflow-hidden">
-                          <Image
-                            src={log.imageUrl}
-                            alt={`${log.childName}の画像`}
-                            width={100}
-                            height={100}
-                            className="object-cover"
-                          />
                         </div>
                       </div>
                       <div className="flex-grow">
