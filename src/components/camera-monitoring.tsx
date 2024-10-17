@@ -149,7 +149,7 @@ export default function CameraMonitoring() {
 
   return (
     <div className="h-full flex flex-col space-y-6">
-      <h2 className="text-3xl font-bold text-gray-800">カメラモニタリング</h2>
+      <h2 className="text-3xl font-bold text-gray-800">AIカメラモニタリング</h2>
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden">
         <Card className="bg-white shadow-lg flex flex-col max-h-[500px]">
           <CardContent className="flex-1 flex flex-col p-4">

@@ -12,16 +12,19 @@ import Reports from "./reports"
 import SettingsPanel from "./settings"
 import CameraMonitoring from "./camera-monitoring"
 import StaffNotes from "./staff-notes"
+import StaffJournal from "./staff-journal"
 import ParentNotifications from "./parent-notifications"
+import ParentMyPage from "./parent-my-page"
 
 const menuItems = [
   { icon: Bell, label: "ダッシュボード", value: "dashboard", color: "bg-pink-200" },
   { icon: Users, label: "児童プロフィール", value: "child-profiles", color: "bg-purple-200" },
-  { icon: Calendar, label: "活動ログ", value: "activity-log", color: "bg-blue-200" },
   { icon: Camera, label: "カメラモニタリング", value: "camera-monitoring", color: "bg-green-200" },
+  { icon: Users, label: "保護者マイページ", value: "parent-my-page", color: "bg-red-200" },
+  { icon: Calendar, label: "スタッフ日誌", value: "staff-journal", color: "bg-green-200" },
+  { icon: MessageSquare, label: "こども日誌", value: "kids-journal", color: "bg-green-200" },
+  { icon: Calendar, label: "活動ログ", value: "activity-log", color: "bg-blue-200" },
   { icon: BarChart2, label: "レポート", value: "reports", color: "bg-yellow-200" },
-  { icon: MessageSquare, label: "スタッフノート", value: "staff-notes", color: "bg-indigo-200" },
-  { icon: AlertTriangle, label: "保護者通知", value: "parent-notifications", color: "bg-orange-200" },
   { icon: Settings, label: "設定", value: "settings", color: "bg-red-200" },
 ]
 
@@ -49,29 +52,31 @@ const Bubble: React.FC<BubbleProps> = ({ size, position, delay }) => {
       }}
       initial={{ bottom: "-100px", scale: 0 }}
       animate={{
-        bottom: "100vh",
-        scale: [0, 1.2, 0],
-        opacity: [0, 0.7, 0],
+        bottom: ["0%", "100%"],
+        scale: [0, 1.2, 0.8, 1.1, 0],
+        opacity: [0, 0.7, 0.5, 0.3, 0],
       }}
       transition={{
         duration: 8,
         delay: delay,
         repeat: Infinity,
         repeatDelay: Math.random() * 10 + 5,
+        times: [0, 0.4, 0.7, 0.9, 1],
+        ease: "easeInOut",
       }}
     />
   )
 }
 
 const BubbleBackground: React.FC = () => {
-  const bubbles = Array.from({ length: 20 }, (_, i) => ({
+  const bubbles = Array.from({ length: 30 }, (_, i) => ({
     id: i,
-    size: Math.random() * 50 + 10,
+    size: Math.random() * 60 + 20,
     position: {
       x: `${Math.random() * 100}%`,
       y: "0%",
     },
-    delay: Math.random() * 10,
+    delay: Math.random() * 15,
   }))
 
   return (
@@ -94,7 +99,7 @@ export function AppLayout() {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 to-blue-100 flex flex-col relative overflow-hidden">
       <BubbleBackground />
       <header className="bg-pink-100 bg-opacity-80 p-4 border-b flex justify-between items-center relative z-10">
-        <h1 className="text-2xl font-bold text-pink-600">キッズマインド コネクト</h1>
+        <h1 className="text-2xl font-bold text-pink-600">KidsMind Connect</h1>
         <div className="flex items-center space-x-4">
           <p className="text-sm font-medium text-gray-600">さくら学童クラブ</p>
           <Select value={selectedStaff} onValueChange={setSelectedStaff}>
@@ -151,12 +156,14 @@ export function AppLayout() {
         <main className="flex-1 overflow-auto p-4 bg-white bg-opacity-50 rounded-lg m-2 relative z-10">
           {activeTab === "dashboard" && <Dashboard />}
           {activeTab === "child-profiles" && <ChildProfiles />}
-          {activeTab === "activity-log" && <ActivityLog />}
           {activeTab === "camera-monitoring" && <CameraMonitoring />}
+          {activeTab === "staff-journal" && <StaffJournal />}
+          {activeTab === "activity-log" && <ActivityLog />}
           {activeTab === "reports" && <Reports />}
           {activeTab === "staff-notes" && <StaffNotes />}
           {activeTab === "parent-notifications" && <ParentNotifications />}
           {activeTab === "settings" && <SettingsPanel />}
+          {activeTab === "parent-my-page" && <ParentMyPage />}
         </main>
       </div>
     </div>
