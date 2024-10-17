@@ -29,10 +29,10 @@ const activities = [
 ]
 
 const initialCameras = [
-  { id: 1, name: "カメラ1", type: "webcam", source: null },
-  { id: 2, name: "カメラ2", type: "webcam", source: null },
-  { id: 3, name: "カメラ3", type: "webcam", source: null },
-  { id: 4, name: "カメラ4", type: "webcam", source: null },
+  { id: 1, name: "教室1", type: "youtube", source: "t_K1TgOQ9Dg" },
+  { id: 2, name: "教室2", type: "youtube", source: "JmsZIRRrXco" },
+  { id: 3, name: "iPad", type: "youtube", source: "j978dwohzQI" },
+  { id: 4, name: "⚫︎⚫︎公園", type: "youtube", source: "6x6FVxLrO1Q" },
 ]
 
 interface Log {
@@ -162,7 +162,7 @@ export default function CameraMonitoring() {
                         <iframe
                           width="100%"
                           height="100%"
-                          src={`https://www.youtube.com/embed/${camera.source}`}
+                          src={`https://www.youtube.com/embed/${camera.source}?autoplay=1&mute=1&loop=1&playlist=${camera.source}`}
                           title={`${camera.name} YouTube Video`}
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
