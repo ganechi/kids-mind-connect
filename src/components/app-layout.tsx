@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Bell, BarChart2, Settings, Users, Calendar, Camera, Menu, X, MessageSquare, AlertTriangle } from "lucide-react"
+import { House, Settings, Users, Calendar, Camera, Menu, X, User } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import Dashboard from "./dashboard"
@@ -17,14 +17,11 @@ import ParentNotifications from "./parent-notifications"
 import ParentMyPage from "./parent-my-page"
 
 const menuItems = [
-  { icon: Bell, label: "ダッシュボード", value: "dashboard", color: "bg-pink-200" },
+  { icon: House, label: "ダッシュボード", value: "dashboard", color: "bg-pink-200" },
   { icon: Users, label: "児童プロフィール", value: "child-profiles", color: "bg-purple-200" },
   { icon: Camera, label: "カメラモニタリング", value: "camera-monitoring", color: "bg-green-200" },
-  { icon: Users, label: "保護者マイページ", value: "parent-my-page", color: "bg-red-200" },
+  { icon: User, label: "保護者マイページ", value: "parent-my-page", color: "bg-red-200" },
   { icon: Calendar, label: "スタッフ日誌", value: "staff-journal", color: "bg-green-200" },
-  { icon: MessageSquare, label: "こども日誌", value: "kids-journal", color: "bg-green-200" },
-  { icon: Calendar, label: "活動ログ", value: "activity-log", color: "bg-blue-200" },
-  { icon: BarChart2, label: "レポート", value: "reports", color: "bg-yellow-200" },
   { icon: Settings, label: "設定", value: "settings", color: "bg-red-200" },
 ]
 

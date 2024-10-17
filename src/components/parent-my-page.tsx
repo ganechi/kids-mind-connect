@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { AlertCircle, AlertTriangle, Info, Star, Check, X, Users } from "lucide-react"
+import { AlertCircle, AlertTriangle, Info, Star, Check, X, Users, Bell } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
@@ -30,18 +30,18 @@ type CommunicationEntry = {
 }
 
 const children = [
-  { id: 2, name: "たろう" },
-  { id: 3, name: "みさき" },
-  { id: 1, name: "はなこ" },
+  { id: 1, name: "はなこさん" },
+  { id: 2, name: "たろうさん" },
+  { id: 3, name: "みさきさん" },
 ]
 
 const mockLogs: LogEntry[] = [
   {
     id: 1,
     childId: 1,
-    childName: "はなこ",
+    childName: "はなこさん",
     time: "10:30",
-    activity: "はなこは友達と協力して積み木で大きな塔を作りました。チームワークと創造性が素晴らしかったです。",
+    activity: "はなこさんは友達と協力して積み木で大きな塔を作りました。チームワークと創造性が素晴らしかったです。",
     type: "気づき",
     icon: Star,
     color: "bg-green-100 text-green-800"
@@ -49,9 +49,9 @@ const mockLogs: LogEntry[] = [
   {
     id: 2,
     childId: 2,
-    childName: "たろう",
+    childName: "たろうさん",
     time: "11:45",
-    activity: "たろうは給食を完食し、「いただきます」「ごちそうさま」をしっかり言えました。食育の成果が見られます。",
+    activity: "たろうさんは給食を完食し、「いただきます」「ごちそうさま」をしっかり言えました。食育の成果が見られます。",
     type: "情報",
     icon: Info,
     color: "bg-blue-100 text-blue-800"
@@ -59,9 +59,9 @@ const mockLogs: LogEntry[] = [
   {
     id: 3,
     childId: 3,
-    childName: "みさき",
+    childName: "みさきさん",
     time: "13:15",
-    activity: "みさきは転んでしまい、膝を擦りむきました。消毒して絆創膏を貼りましたが、様子を見てください。",
+    activity: "みさきさんは転んでしまい、膝を擦りむきました。消毒して絆創膏を貼りましたが、様子を見てください。",
     type: "中",
     icon: AlertTriangle,
     color: "bg-yellow-100 text-yellow-800"
@@ -69,9 +69,9 @@ const mockLogs: LogEntry[] = [
   {
     id: 4,
     childId: 1,
-    childName: "はなこ",
+    childName: "はなこさん",
     time: "14:30",
-    activity: "はなこは今日初めて自分で靴紐を結ぶことができました。とても嬉しそうでした。",
+    activity: "はなこさんは今日初めて自分で靴紐を結ぶことができました。とても嬉しそうでした。",
     type: "気づき",
     icon: Star,
     color: "bg-green-100 text-green-800"
@@ -79,9 +79,9 @@ const mockLogs: LogEntry[] = [
   {
     id: 5,
     childId: 2,
-    childName: "たろう",
+    childName: "たろうさん",
     time: "15:00",
-    activity: "たろうは今日、少し体調が優れず、お昼寝の時間が長めでした。帰宅後も様子を見てください。",
+    activity: "たろうさんは今日、少し体調が優れず、お昼寝の時間が長めでした。帰宅後も様子を見てください。",
     type: "中",
     icon: AlertTriangle,
     color: "bg-yellow-100 text-yellow-800"
@@ -92,7 +92,7 @@ const mockCommunications: CommunicationEntry[] = [
   {
     id: 1,
     childId: 1,
-    childName: "はなこ",
+    childName: "はなこさん",
     time: "08:45",
     message: "明日は遠足です。お弁当と水筒をご用意ください。",
     isUrgent: false,
@@ -101,9 +101,9 @@ const mockCommunications: CommunicationEntry[] = [
   {
     id: 2,
     childId: 2,
-    childName: "たろう",
+    childName: "たろうさん",
     time: "12:30",
-    message: "たろうくんが軽い発熱を起こしました。様子を見ていますが、早めのお迎えをお願いする可能性があります。",
+    message: "たろうさんが軽い発熱を起こしました。様子を見ていますが、早めのお迎えをお願いする可能性があります。",
     isUrgent: true,
     isCommon: false
   },
@@ -149,11 +149,21 @@ const AttendanceSelector = ({ attendance, setAttendance }: { attendance: boolean
   )
 }
 
+const LineNotification = ({ lastNotificationTime }: { lastNotificationTime: string }) => {
+  return (
+    <div className="flex items-center justify-end mb-4 text-sm text-gray-600">
+      <Bell className="w-4 h-4 mr-2" />
+      <span>LINE通知済み: {lastNotificationTime}</span>
+    </div>
+  )
+}
+
 export default function ParentMyPage() {
-  const [selectedChild, setSelectedChild] = useState<number>(children[0].id)
+  const [selectedChild, setSelectedChild] = useState<number>(2) // たろうさんのID
   const [filteredLogs, setFilteredLogs] = useState<LogEntry[]>([])
   const [filteredCommunications, setFilteredCommunications] = useState<CommunicationEntry[]>([])
   const [attendance, setAttendance] = useState<boolean[]>(Array(5).fill(true))
+  const [lastNotificationTime, setLastNotificationTime] = useState<string>("15:45")
 
   useEffect(() => {
     // In a real application, you would fetch this data from an API
@@ -161,22 +171,27 @@ export default function ParentMyPage() {
     setFilteredCommunications(
       mockCommunications.filter(comm => comm.isCommon || comm.childId === selectedChild)
     )
+    // Simulate fetching the last notification time
+    setLastNotificationTime(new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }))
   }, [selectedChild])
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-4">
-      <h1 className="text-3xl font-bold mb-6">保護者マイページ</h1>
-        <Select value={selectedChild.toString()} onValueChange={(value) => setSelectedChild(Number(value))}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="お子様を選択" />
-          </SelectTrigger>
-          <SelectContent>
-            {children.map(child => (
-              <SelectItem key={child.id} value={child.id.toString()}>{child.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">保護者マイページ</h1>
+        <div className="flex items-center space-x-4">
+          <Select value={selectedChild.toString()} onValueChange={(value) => setSelectedChild(Number(value))}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="お子様を選択" />
+            </SelectTrigger>
+            <SelectContent>
+              {children.map(child => (
+                <SelectItem key={child.id} value={child.id.toString()}>{child.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <LineNotification lastNotificationTime={lastNotificationTime} />
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
@@ -209,7 +224,6 @@ export default function ParentMyPage() {
                           </div>
                         </div>
                         <p>{comm.message}</p>
-                        {!comm.isCommon && <p className="text-sm text-gray-500 mt-2">対象: {comm.childName}</p>}
                       </CardContent>
                     </Card>
                   ))
@@ -225,7 +239,7 @@ export default function ParentMyPage() {
             <CardTitle>活動ログ</CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[600px] w-full rounded-md border p-4">
+            <ScrollArea className="h-full w-full rounded-md border p-4">
               {filteredLogs.length > 0 ? (
                 filteredLogs.map(log => (
                   <Card key={log.id} className={`mb-4 ${log.color}`}>
