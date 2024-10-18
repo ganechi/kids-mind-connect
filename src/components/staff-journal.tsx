@@ -5,11 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { AlertCircle, AlertTriangle, Info, Star, Printer } from "lucide-react"
+import { AlertCircle, AlertTriangle, Info, Star, Printer, ChevronLeft, ChevronRight } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 const children = [
   { id: 1, name: "はなこさん" },
@@ -22,14 +24,21 @@ const children = [
 ]
 
 const activities = [
-  { id: 1, name: "朝の会", time: "09:00 - 09:15" },
-  { id: 2, name: "自由遊び", time: "09:15 - 10:30" },
-  { id: 3, name: "おやつ時間", time: "10:30 - 11:00" },
-  { id: 4, name: "学習時間", time: "11:00 - 12:00" },
-  { id: 5, name: "昼食", time: "12:00 - 13:00" },
-  { id: 6, name: "お昼寝", time: "13:00 - 14:30" },
-  { id: 7, name: "おやつ時間", time: "14:30 - 15:00" },
-  { id: 8, name: "帰りの会", time: "15:00 - 15:15" },
+  { id: 1, name: "朝の会", time: "09:00" },
+  { id: 2, name: "自由遊び", time: "09:15" },
+  { id: 3, name: "おやつ時間", time: "10:30" },
+  { id: 4, name: "学習時間", time: "11:00" },
+  { id: 5, name: "昼食", time: "12:00" },
+  { id: 6, name: "お昼寝", time: "13:00" },
+  { id: 7, name: "おやつ時間", time: "14:30" },
+  { id: 8, name: "帰りの会", time: "15:00" },
+]
+
+const staffMembers = [
+  { id: 1, name: "山田太郎" },
+  { id: 2, name: "佐藤花子" },
+  { id: 3, name: "鈴木一郎" },
+  { id: 4, name: "田中美咲" },
 ]
 
 type LogEntry = {
@@ -50,8 +59,8 @@ type MealInfo = {
 }
 
 type HealthInfo = {
-  illnesses: { childName: string; symptom: string }[]
-  injuries: { childName: string; injury: string }[]
+  illnesses: { childName: string; symptom: string; confirmer: number | null; reporter: number | null }[]
+  injuries: { childName: string; injury: string; confirmer: number | null; reporter: number | null }[]
 }
 
 type ParticipantCounts = {
@@ -65,16 +74,54 @@ const ChildRow = ({ child, aiSummary, onSummaryChange }: {
 }) => {
   return (
     <TableRow className="[&_td]:py-2">
-      <TableCell className="font-medium">{child.name}</TableCell>
+      <TableCell className="font-medium w-[100px]">{child.name}</TableCell>
       <TableCell>
         <Textarea
           value={aiSummary}
           onChange={(e) => onSummaryChange(child.id, e.target.value)}
-          className="w-full min-h-[60px]"
+          className="w-full min-h-[80px]"
           maxLength={100}
         />
       </TableCell>
     </TableRow>
+  )
+}
+
+const StaffAvatarSelect = ({ selectedId, onSelect, label }: { selectedId: number | null, onSelect: (id: number) => void, label: string }) => {
+  return (
+    <div className="flex flex-col items-center">
+      <Label className="mb-1 text-xs">{label}</Label>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="w-10 h-10 rounded-full p-0">
+            {selectedId ? (
+              <Avatar className="w-9 h-9">
+                <AvatarFallback>{staffMembers.find(s => s.id === selectedId)?.name[0]}</AvatarFallback>
+              </Avatar>
+            ) : (
+              <span className="sr-only">Select staff</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-50">
+          <div className="grid grid-cols-2 gap-2">
+            {staffMembers.map((staff) => (
+              <Button
+                key={staff.id}
+                variant="ghost"
+                className="w-full justify-start"
+                onClick={() => onSelect(staff.id)}
+              >
+                <Avatar className="w-6 h-6 mr-2">
+                  <AvatarFallback>{staff.name[0]}</AvatarFallback>
+                </Avatar>
+                {staff.name}
+              </Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
   )
 }
 
@@ -99,8 +146,8 @@ export default function StaffJournal() {
     afternoonSnack: "ヨーグルトとバナナ"
   })
   const [healthInfo, setHealthInfo] = useState<HealthInfo>({
-    illnesses: [{ childName: "たろうさん", symptom: "微熱" }],
-    injuries: [{ childName: "みさきさん", injury: "擦り傷（膝）" }]
+    illnesses: [{ childName: "たろうさん", symptom: "微熱", confirmer: null, reporter: null }],
+    injuries: [{ childName: "みさきさん", injury: "擦り傷（膝）", confirmer: null, reporter: null }]
   })
   const [staffNames, setStaffNames] = useState<string>("山田太郎, 佐藤花子, 鈴木一郎")
 
@@ -155,31 +202,66 @@ export default function StaffJournal() {
     setAiSummaries(prev => ({ ...prev, [childId]: summary }))
   }
 
+  const handleHealthInfoChange = (
+    type: 'illnesses' | 'injuries',
+    index: number,
+    field: 'confirmer' | 'reporter',
+    value: number
+  ) => {
+    setHealthInfo((prev) => ({
+      ...prev,
+      [type]: prev[type].map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      ),
+    }))
+  }
+
   const handlePrint = () => {
     window.print()
   }
 
+  const handlePreviousDay = () => {
+    const currentDate = new Date(date);
+    currentDate.setDate(currentDate.getDate() - 1);
+    setDate(currentDate.toISOString().split('T')[0]);
+  };
+
+  const handleNextDay = () => {
+    const currentDate = new Date(date);
+    currentDate.setDate(currentDate.getDate() + 1);
+    setDate(currentDate.toISOString().split('T')[0]);
+  };
+
   return (
-    <div className="container mx-auto p-4 max-w-5xl">
+    <div className="container mx-auto p-2 max-w-7xl">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">スタッフ日誌</h1>
-        <Button onClick={handlePrint} className="print:hidden">
-          <Printer className="mr-2 h-4 w-4" /> 印刷
-        </Button>
+        <h1 className="text-3xl  font-bold">スタッフ日誌</h1>
+        
+        <div className="flex items-center space-x-2">
+          <Button variant="outline" onClick={handlePreviousDay}>
+            <ChevronLeft className="mr-2 h-4 w-4" /> 前の日
+          </Button>
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="date" className="sr-only">日付</Label>
+            <Input
+              type="date"
+              id="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-40"
+            />
+          </div>
+          <Button variant="outline" onClick={handleNextDay}>
+            次の日 <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button onClick={handlePrint} className="print:hidden">
+            <Printer className="mr-2 h-4 w-4" /> 印刷
+          </Button>
+        </div>
       </div>
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="flex flex-wrap items-end gap-4 mb-4">
-            <div className="w-40">
-              <Label htmlFor="date">日付</Label>
-              <Input
-                type="date"
-                id="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full"
-              />
-            </div>
             <div className="flex-1">
               <Label>参加者数</Label>
               <div className="grid grid-cols-6 gap-2">
@@ -218,28 +300,50 @@ export default function StaffJournal() {
               <p><span className="font-medium">午後おやつ：</span>{mealInfo.afternoonSnack}</p>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">健康状態</h3>
+              <h3 className="font-semibold mb-2">けが・病気の報告</h3>
               <div className="space-y-2">
                 {healthInfo.illnesses.map((illness, index) => (
-                  <p key={index}>
-                    <Badge variant="destructive" className="mr-2">病気</Badge>
-                    {illness.childName}：{illness.symptom}
-                  </p>
+                  <div key={index} className="flex items-center space-x-2">
+                    <Badge variant="destructive">病気</Badge>
+                    <span className="font-medium w-20">{illness.childName}</span>
+                    <span className="flex-grow">{illness.symptom}</span>
+                    <StaffAvatarSelect
+                      selectedId={illness.confirmer}
+                      onSelect={(id) => handleHealthInfoChange('illnesses', index, 'confirmer', id)}
+                      label="確認者"
+                    />
+                    <StaffAvatarSelect
+                      selectedId={illness.reporter}
+                      onSelect={(id) => handleHealthInfoChange('illnesses', index, 'reporter', id)}
+                      label="報告者"
+                    />
+                  </div>
                 ))}
                 {healthInfo.injuries.map((injury, index) => (
-                  <p key={index}>
-                    <Badge variant="destructive" className="mr-2">怪我</Badge>
-                    {injury.childName}：{injury.injury}
-                  </p>
+                  <div key={index} className="flex items-center space-x-2">
+                    <Badge variant="destructive">怪我</Badge>
+                    <span className="font-medium w-20">{injury.childName}</span>
+                    <span className="flex-grow">{injury.injury}</span>
+                    <StaffAvatarSelect
+                      selectedId={injury.confirmer}
+                      onSelect={(id) => handleHealthInfoChange('injuries', index, 'confirmer', id)}
+                      label="確認者"
+                    />
+                    <StaffAvatarSelect
+                      selectedId={injury.reporter}
+                      onSelect={(id) => handleHealthInfoChange('injuries', index, 'reporter', id)}
+                      label="報告者"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
-      <div className="grid  grid-cols-1 md:grid-cols-2 gap-6 print:grid-cols-2">
-        <Card className="h-[calc(100vh-200px)] print:h-auto">
-          <CardHeader className="pb-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 print:grid-cols-2">
+        <Card className="h-[calc(100vh-180px)] print:h-auto">
+          <CardHeader   className="pb-2">
             <CardTitle>子供の様子</CardTitle>
           </CardHeader>
           <CardContent>
@@ -265,30 +369,31 @@ export default function StaffJournal() {
             </ScrollArea>
           </CardContent>
         </Card>
-        <Card className="h-[calc(100vh-200px)] print:h-auto">
+        <Card className="h-[calc(100vh-180px)] print:h-auto">
           <CardHeader className="pb-2">
             <CardTitle>活動記録</CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea  className="h-[calc(100vh-300px)] print:h-auto">
+            <ScrollArea className="h-[calc(100vh-300px)] print:h-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">時間</TableHead>
-                    <TableHead className="w-[100px]">活動</TableHead>
+                    <TableHead className="w-[120px]">時間・活動</TableHead>
                     <TableHead>内容</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {activities.map(activity => (
                     <TableRow key={activity.id} className="[&_td]:py-2">
-                      <TableCell>{activity.time}</TableCell>
-                      <TableCell>{activity.name}</TableCell>
+                      <TableCell className="align-top">
+                        <div className="font-medium">{activity.time}</div>
+                        <div>{activity.name}</div>
+                      </TableCell>
                       <TableCell>
                         <Textarea
                           value={activityLogs[activity.id] || ""}
                           onChange={(e) => handleActivityLogChange(activity.id, e.target.value)}
-                          className="min-h-[60px]"
+                          className="w-full min-h-[80px]"
                         />
                       </TableCell>
                     </TableRow>
@@ -299,7 +404,7 @@ export default function StaffJournal() {
           </CardContent>
         </Card>
       </div>
-      <Card className="mt-6">
+      <Card className="mt-4">
         <CardHeader className="pb-2">
           <CardTitle>総括コメント</CardTitle>
         </CardHeader>
